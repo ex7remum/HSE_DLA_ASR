@@ -1,5 +1,5 @@
 {
-  "name": "default_config",
+  "name": "config",
   "n_gpu": 1,
   "preprocessing": {
     "sr": 16000,
@@ -15,10 +15,13 @@
     "spectrogram": []
   },
   "arch": {
-    "type": "BaselineModel",
+    "type": "DeepSpeech2",
     "args": {
       "n_feats": 128,
-      "fc_hidden": 512
+      "n_layers_rnn": 5,
+      "hidden_size": 512,
+      "is_bidirectional": 1,
+      "dropout": 0.1
     }
   },
   "data": {

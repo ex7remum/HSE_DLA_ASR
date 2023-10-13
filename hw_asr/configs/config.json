@@ -19,7 +19,7 @@
     "args": {
       "n_feats": 128,
       "n_layers_rnn": 5,
-      "hidden_size": 800,
+      "hidden_size": 600,
       "is_bidirectional": 1,
       "dropout": 0.2
     }
@@ -94,23 +94,9 @@
       }
     },
     {
-      "type": "BeamSearchWERMetric",
-      "args": {
-        "name": "WER BS",
-        "beam_size": 5
-      }
-    },
-    {
       "type": "ArgmaxCERMetric",
       "args": {
         "name": "CER (argmax)"
-      }
-    },
-    {
-      "type": "BeamSearchCERMetric",
-      "args": {
-        "name": "CER BS",
-        "beam_size": 5
       }
     }
   ],

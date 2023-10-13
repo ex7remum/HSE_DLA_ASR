@@ -71,9 +71,23 @@
       }
     },
     {
+      "type": "BeamSearchWERMetric",
+      "args": {
+        "name": "WER BS",
+        "beam_size": 50
+      }
+    },
+    {
       "type": "ArgmaxCERMetric",
       "args": {
         "name": "CER (argmax)"
+      }
+    },
+    {
+      "type": "BeamSearchCERMetric",
+      "args": {
+        "name": "CER BS",
+        "beam_size": 50
       }
     }
   ],

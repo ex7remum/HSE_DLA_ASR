@@ -25,3 +25,20 @@ class ArgmaxWERMetric(BaseMetric):
                 pred_text = self.text_encoder.decode(log_prob_vec[:length])
             wers.append(calc_wer(target_text, pred_text))
         return sum(wers) / len(wers)
+
+
+class BeamSearchWERMetric(BaseMetric):
+    def __init__(self, text_encoder: BaseTextEncoder, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.text_encoder = text_encoder
+        self.beam_size = args['beam_size']
+
+    def __call__(self, log_probs: Tensor, log_probs_length: Tensor, text: List[str], **kwargs):
+        wers = []
+        lengths = log_probs_length.detach().numpy()
+        for pred, length, target_text in zip(log_probs.cpu(), lengths, text):
+            target_text = BaseTextEncoder.normalize_text(target_text)
+            beam_search_result = self.text_encoder.ctc_beam_search(pred[:length], self.beam_size)
+            pred_text = beam_search_result[0].text
+            wers.append(calc_wer(target_text, pred_text))
+        return sum(wers) / len(wers)

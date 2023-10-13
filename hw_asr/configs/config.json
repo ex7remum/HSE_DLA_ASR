@@ -97,7 +97,7 @@
       "type": "BeamSearchWERMetric",
       "args": {
         "name": "WER BS",
-        "beam_size": 50
+        "beam_size": 5
       }
     },
     {
@@ -110,7 +110,7 @@
       "type": "BeamSearchCERMetric",
       "args": {
         "name": "CER BS",
-        "beam_size": 50
+        "beam_size": 5
       }
     }
   ],

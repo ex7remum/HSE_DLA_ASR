@@ -19,9 +19,9 @@
     "args": {
       "n_feats": 128,
       "n_layers_rnn": 5,
-      "hidden_size": 512,
+      "hidden_size": 800,
       "is_bidirectional": 1,
-      "dropout": 0.1
+      "dropout": 0.2
     }
   },
   "data": {
@@ -33,6 +33,14 @@
           "type": "LibrispeechDataset",
           "args": {
             "part": "train-clean-100",
+            "max_audio_length": 20.0,
+            "max_text_length": 200
+          }
+        },
+        {
+          "type": "LibrispeechDataset",
+          "args": {
+            "part": "train-other-500",
             "max_audio_length": 20.0,
             "max_text_length": 200
           }

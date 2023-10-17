@@ -16,13 +16,13 @@
         "type": "PitchShift",
         "args": {
           "sample_rate": 16000,
-          "p": 0.1
+          "p": 0.2
         }
       },
       {
         "type": "GaussianNoise",
         "args": {
-          "p": 0.1,
+          "p": 0.2,
           "std": 0.05
         }
       }
@@ -31,8 +31,8 @@
       {
         "type": "FrequencyMasking",
         "args": {
-          "frequency_mask": 15,
-          "p": 0.1
+          "frequency_mask": 20,
+          "p": 0.2
         }
       }
     ]
@@ -44,7 +44,7 @@
       "n_layers_rnn": 5,
       "hidden_size": 600,
       "is_bidirectional": 1,
-      "dropout": 0.1
+      "dropout": 0.2
     }
   },
   "data": {

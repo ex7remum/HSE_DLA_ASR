@@ -11,8 +11,31 @@
     "log_spec": true
   },
   "augmentations": {
-    "wave": [],
-    "spectrogram": []
+    "wave": [
+      {
+        "type": "PitchShift",
+        "args": {
+          "sample_rate": 16000,
+          "p": 0.1
+        }
+      },
+      {
+        "type": "GaussianNoise",
+        "args": {
+          "p": 0.1,
+          "std": 0.05
+        }
+      }
+    ],
+    "spectrogram": [
+      {
+        "type": "FrequencyMasking",
+        "args": {
+          "frequency_mask": 15,
+          "p": 0.1
+        }
+      }
+    ]
   },
   "arch": {
     "type": "DeepSpeech2",
@@ -21,7 +44,7 @@
       "n_layers_rnn": 5,
       "hidden_size": 600,
       "is_bidirectional": 1,
-      "dropout": 0.2
+      "dropout": 0.1
     }
   },
   "data": {
@@ -47,18 +70,6 @@
           "type": "LibrispeechDataset",
           "args": {
             "part": "dev-clean"
-          }
-        }
-      ]
-    },
-    "test-other": {
-      "batch_size": 30,
-      "num_workers": 5,
-      "datasets": [
-        {
-          "type": "LibrispeechDataset",
-          "args": {
-            "part": "test-other"
           }
         }
       ]

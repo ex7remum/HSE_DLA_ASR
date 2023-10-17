@@ -38,7 +38,27 @@ class BeamSearchWERMetric(BaseMetric):
         lengths = log_probs_length.detach().numpy()
         for pred, length, target_text in zip(log_probs, lengths, text):
             target_text = BaseTextEncoder.normalize_text(target_text)
-            beam_search_result = self.text_encoder.ctc_beam_search(pred[:length], self.beam_size)
+            beam_search_result = self.text_encoder.ctc_beam_search(torch.exp(pred[:length]), self.beam_size)
+            pred_text = beam_search_result[0].text
+            wers.append(calc_wer(target_text, pred_text))
+        return sum(wers) / len(wers)
+
+
+class LMBeamSearchWERMetric(BaseMetric):
+    def __init__(self, text_encoder: BaseTextEncoder, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.text_encoder = text_encoder
+        self.beam_size = kwargs['beam_size']
+        self.alpha = kwargs['alpha']
+        self.beta = kwargs['beta']
+
+    def __call__(self, log_probs: Tensor, log_probs_length: Tensor, text: List[str], **kwargs):
+        wers = []
+        lengths = log_probs_length.detach().numpy()
+        for pred, length, target_text in zip(log_probs, lengths, text):
+            target_text = BaseTextEncoder.normalize_text(target_text)
+            beam_search_result = self.text_encoder.lm_ctc_beam_search(torch.exp(pred[:length]),
+                                                                      self.beam_size, self.alpha, self.beta)
             pred_text = beam_search_result[0].text
             wers.append(calc_wer(target_text, pred_text))
         return sum(wers) / len(wers)

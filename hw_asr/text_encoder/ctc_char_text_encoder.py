@@ -2,7 +2,6 @@ from typing import List, NamedTuple
 from collections import defaultdict
 import torch
 from pyctcdecode import build_ctcdecoder
-import kenlm
 
 
 from .char_text_encoder import CharTextEncoder

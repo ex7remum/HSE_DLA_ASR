@@ -63,8 +63,8 @@ class LibrispeechDataset(BaseDataset):
 
     def _create_index(self, part):
         index = []
-        split_dir = Path("kaggle/input/librispeech") / part / 'LibriSpeech' / part
-        print(split_dir)
+        split_dir = Path("/kaggle/input/librispeech") / part / 'LibriSpeech' / part
+        # print(split_dir)
         # split_dir = self._data_dir / part
         if not split_dir.exists():
             self._load_part(part)

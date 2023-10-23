@@ -30,7 +30,7 @@ class LibrispeechDataset(BaseDataset):
 
         if data_dir is None:
             # data_dir = ROOT_PATH / "data" / "datasets" / "librispeech"
-            data_dir = ROOT_PATH / "kaggle" / "input" / "librispeech"
+            data_dir = ROOT_PATH / "input" / "librispeech"
             data_dir.mkdir(exist_ok=True, parents=True)
         self._data_dir = data_dir
         if part == 'train_all':

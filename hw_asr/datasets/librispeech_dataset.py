@@ -29,8 +29,7 @@ class LibrispeechDataset(BaseDataset):
         assert part in URL_LINKS or part == 'train_all'
 
         if data_dir is None:
-            # data_dir = ROOT_PATH / "data" / "datasets" / "librispeech"
-            data_dir = ROOT_PATH / "input" / "librispeech"
+            data_dir = ROOT_PATH / "data" / "datasets" / "librispeech"
             data_dir.mkdir(exist_ok=True, parents=True)
         self._data_dir = data_dir
         if part == 'train_all':
@@ -64,7 +63,7 @@ class LibrispeechDataset(BaseDataset):
 
     def _create_index(self, part):
         index = []
-        split_dir = self._data_dir / part / 'LibriSpeech' / part
+        split_dir = "kaggle" / "working" / part / 'LibriSpeech' / part
         # split_dir = self._data_dir / part
         if not split_dir.exists():
             self._load_part(part)

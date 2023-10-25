@@ -7,8 +7,9 @@ import torch
 from tqdm import tqdm
 
 import hw_asr.model as module_model
+import hw_asr.metric as module_metric
 from hw_asr.trainer import Trainer
-from hw_asr.utils import ROOT_PATH
+from hw_asr.utils import ROOT_PATH, MetricTracker
 from hw_asr.utils.object_loading import get_dataloaders
 from hw_asr.utils.parse_config import ConfigParser
 
@@ -42,7 +43,13 @@ def main(config, out_file):
     model = model.to(device)
     model.eval()
 
-    results = []
+    metrics = [
+        config.init_obj(metric_dict, module_metric, text_encoder=text_encoder)
+        for metric_dict in config["metrics"]
+    ]
+    metrics_tracker = MetricTracker(
+        *[m.name for m in metrics]
+    )
 
     with torch.no_grad():
         for batch_num, batch in enumerate(tqdm(dataloaders["test"])):
@@ -56,22 +63,10 @@ def main(config, out_file):
             batch["log_probs_length"] = model.transform_input_lengths(
                 batch["spectrogram_length"]
             )
-            batch["probs"] = batch["log_probs"].exp().cpu()
-            batch["argmax"] = batch["probs"].argmax(-1)
-            for i in range(len(batch["text"])):
-                argmax = batch["argmax"][i]
-                argmax = argmax[: int(batch["log_probs_length"][i])]
-                results.append(
-                    {
-                        "ground_trurh": batch["text"][i],
-                        "pred_text_argmax": text_encoder.ctc_decode(argmax.cpu().numpy()),
-                        "pred_text_beam_search": text_encoder.ctc_beam_search(
-                            batch["probs"][i], batch["log_probs_length"][i], beam_size=100
-                        )[:10],
-                    }
-                )
-    with Path(out_file).open("w") as f:
-        json.dump(results, f, indent=2)
+            for metric in metrics:
+                metrics_tracker.update(metric.name, metric(**batch), n=len(batch['text']))
+
+    print(metrics_tracker.result())
 
 
 if __name__ == "__main__":

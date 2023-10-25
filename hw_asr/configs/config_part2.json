@@ -15,14 +15,7 @@
         "type": "PitchShift",
         "args": {
           "sample_rate": 16000,
-          "p": 0.2
-        }
-      },
-      {
-        "type": "GaussianNoise",
-        "args": {
-          "p": 0.2,
-          "std": 0.05
+          "p": 0.1
         }
       }
     ],
@@ -30,8 +23,8 @@
       {
         "type": "FrequencyMasking",
         "args": {
-          "frequency_mask": 30,
-          "p": 0.2
+          "frequency_mask": 20,
+          "p": 0.1
         }
       }
     ]
@@ -114,14 +107,14 @@
         "type": "OneCycleLR",
         "args": {
             "steps_per_epoch": 100,
-            "epochs": 100,
+            "epochs": 200,
             "anneal_strategy": "cos",
             "max_lr": 0.0003,
             "pct_start": 0.2
         }
     },
     "trainer": {
-        "epochs": 100,
+        "epochs": 200,
         "save_dir": "saved/",
         "save_period": 5,
         "verbosity": 2,

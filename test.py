@@ -73,8 +73,7 @@ def main(config, out_file):
             pred_text_beam_lm = text_encoder.lm_ctc_beam_search(batch['probs'][0][:length], beam_size=200,
                                                                 alpha=1.0)[0].text
             pred_text_beam = text_encoder.ctc_beam_search(batch['probs'][0][:length], beam_size=3)[0].text
-            print(batch["text"][0], pred_text_argmax, pred_text_beam, pred_text_beam_lm)
-            print(metrics_tracker.result())
+
             results.append({
                 "ground_trurh": batch["text"][0],
                 "pred_text_argmax": pred_text_argmax,

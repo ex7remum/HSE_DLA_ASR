@@ -69,11 +69,11 @@ def main(config, out_file):
             batch["probs"] = batch["log_probs"].exp().cpu()
             batch["argmax"] = batch["probs"].argmax(-1)
             length = batch['log_probs_length'][0]
-            pred_text_argmax = text_encoder.ctc_decode(batch["argmax"][0][:length])
+            pred_text_argmax = text_encoder.ctc_decode(batch["argmax"][0][:length].numpy())
             pred_text_beam_lm = text_encoder.lm_ctc_beam_search(batch['probs'][0][:length], beam_size=200,
                                                                 alpha=1.0)[0].text
             pred_text_beam = text_encoder.ctc_beam_search(batch['probs'][0][:length], beam_size=3)[0].text
-
+            print(batch["text"][0], pred_text_argmax, pred_text_beam, pred_text_beam_lm)
             results.append({
                 "ground_trurh": batch["text"][0],
                 "pred_text_argmax": pred_text_argmax,

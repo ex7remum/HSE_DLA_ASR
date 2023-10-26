@@ -50,7 +50,7 @@ def main(config, out_file):
     metrics_tracker = MetricTracker(
         *[m.name for m in metrics]
     )
-
+    results = []
     with torch.no_grad():
         for batch_num, batch in enumerate(tqdm(dataloaders["test"])):
             batch = Trainer.move_batch_to_device(batch, device)
@@ -66,7 +66,24 @@ def main(config, out_file):
             for metric in metrics:
                 metrics_tracker.update(metric.name, metric(**batch), n=len(batch['text']))
 
+            batch["probs"] = batch["log_probs"].exp().cpu()
+            batch["argmax"] = batch["probs"].argmax(-1)
+            length = batch['log_probs_length'][0]
+            pred_text_argmax = text_encoder.ctc_decode(batch["argmax"][0][:length])
+            pred_text_beam_lm = text_encoder.lm_ctc_beam_search(batch['probs'][0][:length], beam_size=200,
+                                                                alpha=1.0)[0].text
+            pred_text_beam = text_encoder.ctc_beam_search(batch['probs'][0][:length], beam_size=3)[0].text
+
+            results.append({
+                "ground_trurh": batch["text"][0],
+                "pred_text_argmax": pred_text_argmax,
+                "pred_text_beam_search": pred_text_beam,
+                "pred_text_beam_search_lm": pred_text_beam_lm
+            })
+
     print(metrics_tracker.result())
+    with Path(out_file).open('w') as f:
+        json.dump(results, f, indent=2)
 
 
 if __name__ == "__main__":
